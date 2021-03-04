@@ -1,0 +1,13 @@
+.funignore
+.fun/
+package*.json
+node_modules/
+.gitignore
+go.mod
+go.sum
+main.go
+Makefile
+README.md
+template.yml
+.serverless/
+serverless.yml

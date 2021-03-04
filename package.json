@@ -1,0 +1,14 @@
+{
+  "name": "aliyun-go-http-test",
+  "version": "1.0.0",
+  "description": "Aliyun http function example using golang",
+  "main": "main.go",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wsw0108",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-aliyun-function-compute": "*"
+  }
+}

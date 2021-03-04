@@ -1,0 +1,51 @@
+# Welcome to Serverless!
+#
+# For full config options, check out the Alibaba Cloud Function Compute
+# plugin docs:
+#    https://github.com/aliyun/serverless-aliyun-function-compute
+#
+# For documentation on Alibaba Cloud Function Compute itself:
+#    https://serverless.aliyun.com
+
+# Update the service name below with your own service name
+
+service: go-http-test
+
+frameworkVersion: '2'
+
+provider:
+  name: aliyun
+  runtime: custom
+  # memorySize: 1024
+  # timeout: 120
+  credentials: ~/.aliyuncli/credentials # path must be absolute
+
+plugins:
+  - serverless-aliyun-function-compute
+
+package:
+  exclude:
+    - package.json
+    - main.go
+    - go.mod
+    - go.sum
+    - Makefile
+    - README.md
+    - node_modules/**
+    - .fun/**
+    - .funignore
+    - template.yml
+    - package-lock.json
+    - .gitignore
+    - .git/**
+
+functions:
+  # serverless-aliyun-function-compute:/provider/aliyunProvider:getFunctionResource(funcObject)
+  sls-test:
+    handler: what.ever
+    memorySize: 1024
+    timeout: 120
+    events:
+      - http:
+          path: /whatever
+          method: get
