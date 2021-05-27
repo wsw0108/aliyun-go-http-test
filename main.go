@@ -1,48 +1,40 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
-func StripFcBasePath() echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) (err error) {
-			req := c.Request()
-			url := req.URL
-			basePath := req.Header.Get("x-fc-base-path")
-			if basePath != "" {
-				replacer := strings.NewReplacer(basePath, "")
-				uri := replacer.Replace(req.URL.Path)
-				req.RequestURI = uri
-				url.Path = uri
-			}
-			return next(c)
-		}
-	}
-}
-
 func main() {
-	// Echo instance
-	e := echo.New()
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 
-	e.Pre(StripFcBasePath())
+	r.Use(func(next http.Handler) http.Handler {
+		fn := func(w http.ResponseWriter, r *http.Request) {
+			qualifier := r.Header.Get("x-fc-qualifier")
+			if qualifier != "" && !strings.EqualFold(qualifier, "LATEST") {
+				parts := strings.Split(qualifier, "_")
+				prefix := "/" + parts[0]
+				http.StripPrefix(prefix, next).ServeHTTP(w, r)
+			} else {
+				next.ServeHTTP(w, r)
+			}
+		}
+		return http.HandlerFunc(fn)
+	})
 
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	r.Get("/headers", func(w http.ResponseWriter, r *http.Request) {
+		r.Header.WriteSubset(w, nil)
+	})
 
-	// Routes
-	e.GET("/ping", ping)
+	r.Get("/v1/headers", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("v1\n"))
+		r.Header.WriteSubset(w, nil)
+	})
 
-	// Start server
-	e.Logger.Fatal(e.Start(":9000"))
-}
-
-// Handler
-func ping(c echo.Context) error {
-	return c.String(http.StatusOK, "pong!")
+	log.Fatalln(http.ListenAndServe(":9000", r))
 }
