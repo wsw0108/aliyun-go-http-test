@@ -1,5 +1,6 @@
 .funignore
 .fun/
+.idea/
 package*.json
 node_modules/
 .gitignore
