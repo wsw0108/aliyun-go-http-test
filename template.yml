@@ -4,17 +4,17 @@ Resources:
   go-http-test: # service name
     Type: 'Aliyun::Serverless::Service'
     Properties:
-      Description: This is FC service
+      Description: go http test service
     fun-test: # function name
       Type: 'Aliyun::Serverless::Function'
       Properties:
+        Description: go http test function
         Handler: what.ever
         Runtime: custom
         CodeUri: ./
         MemorySize: 1024
         InstanceConcurrency: 5
         Timeout: 120
-
       Events:
         httpTrigger:
           Type: HTTP
