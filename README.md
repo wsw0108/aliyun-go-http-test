@@ -2,7 +2,7 @@
 
 ## local
 - `http :9000/v1/headers x-fc-qualifier:v1_2_3`, 200 OK, no v1
-- `http :9000/headers x-fc-qualifier:v1_2_3`, 404 Not Found
+- `http :9000/headers x-fc-qualifier:v1_2_3`, 200 OK, no v1
 - `http :9000/v1/headers x-fc-qualifier:LATEST`, 200 OK, v1
 - `http :9000/headers x-fc-qualifier:LATEST`, 200 OK, no v1
 

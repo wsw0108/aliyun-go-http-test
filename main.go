@@ -31,10 +31,12 @@ func main() {
 			if qualifier != "" && !strings.EqualFold(qualifier, "LATEST") {
 				parts := strings.Split(qualifier, "_")
 				prefix := "/" + parts[0]
-				http.StripPrefix(prefix, next).ServeHTTP(w, r)
-			} else {
-				next.ServeHTTP(w, r)
+				if strings.HasPrefix(r.URL.Path, prefix) {
+					http.StripPrefix(prefix, next).ServeHTTP(w, r)
+					return
+				}
 			}
+			next.ServeHTTP(w, r)
 		}
 		return http.HandlerFunc(fn)
 	})
