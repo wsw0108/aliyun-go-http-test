@@ -15,6 +15,18 @@ func main() {
 
 	r.Use(func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
+			base := r.Header.Get("x-fc-base-path")
+			if base != "" {
+				http.StripPrefix(base, next).ServeHTTP(w, r)
+			} else {
+				next.ServeHTTP(w, r)
+			}
+		}
+		return http.HandlerFunc(fn)
+	})
+
+	r.Use(func(next http.Handler) http.Handler {
+		fn := func(w http.ResponseWriter, r *http.Request) {
 			qualifier := r.Header.Get("x-fc-qualifier")
 			if qualifier != "" && !strings.EqualFold(qualifier, "LATEST") {
 				parts := strings.Split(qualifier, "_")
