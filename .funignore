@@ -9,6 +9,6 @@ go.sum
 main.go
 Makefile
 README.md
-template.yml
+template*.yml
 .serverless/
 serverless.yml

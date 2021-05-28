@@ -6,3 +6,4 @@ example
 # Serverless directories
 .serverless
 .fun
+template.packaged.yml
